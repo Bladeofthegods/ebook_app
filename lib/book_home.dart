@@ -1,4 +1,5 @@
 import 'package:ebook_app/widgets/book_list/book_list.dart';
+import 'package:ebook_app/widgets/book_list/grid_view.dart';
 import 'package:ebook_app/widgets/book_list/new_book.dart';
 import 'package:flutter/material.dart';
 import 'package:ebook_app/models/ebook.dart';
@@ -28,6 +29,15 @@ class _EbookHomeState extends State<EbookHome> {
       author: 'Mgt',
       description:
           'When Mary needs to pick a topic for her research project, she lands on investigating the rumor about the “Magic Mirror of Hallucinations,” a nightmarish object said to cause your own reflection to try to switch places with you. Naturally, Mary immediately stumbles upon the mirror and carelessly exposes herself to its effects—when nothing happens, she wonders whether it was just a rumor after all. Soon enough, however, it appears to her friends and classmates that she’s turned over a new leaf: where before she went to such great lengths to be demure and ladylike, she’s now wearing frilly miniskirts, referring to herself as “Platinum Heart SR,” and, most troublingly, claiming she’s neck-deep in a conflict with a shadowy cabal known only as “the organization.” Can Mary successfully unravel the organization’s intrigue before her academy life collapses? Or will she go down in the hearts and minds of her friends as the girl who failed to defeat the great evil haunting her?',
+      views: 20,
+    ),
+    Ebook(
+      title: 'That timhe',
+      image: 'https://zerobooks.co/a.a.a/images/id12.jpg',
+      date: DateTime.now(),
+      author: 'Mgt',
+      description:
+          'When Marmy needs to pick a topic for her research project, she lands on investigating the rumor about the “Magic Mirror of Hallucinations,” a nightmarish object said to cause your own reflection to try to switch places with you. Naturally, Mary immediately stumbles upon the mirror and carelessly exposes herself to its effects—when nothing happens, she wonders whether it was just a rumor after all. Soon enough, however, it appears to her friends and classmates that she’s turned over a new leaf: where before she went to such great lengths to be demure and ladylike, she’s now wearing frilly miniskirts, referring to herself as “Platinum Heart SR,” and, most troublingly, claiming she’s neck-deep in a conflict with a shadowy cabal known only as “the organization.” Can Mary successfully unravel the organization’s intrigue before her academy life collapses? Or will she go down in the hearts and minds of her friends as the girl who failed to defeat the great evil haunting her?',
       views: 20,
     ),
   ];
@@ -75,13 +85,21 @@ class _EbookHomeState extends State<EbookHome> {
             setState(() {
               _registeredEbook[ebookIndex] = editedEbook;
             });
-            Navigator.of(context).pop(); // Close the modal bottom sheet
+            // Navigator.of(context).pop(); // Close the modal bottom sheet
           },
           // Pass the ebook to be edited to the NewBook widget
           initialEbook: ebook,
         );
       },
     );
+  }
+
+  bool _showGridView = false; // Initial view is the list view
+
+  void _toggleViewMode() {
+    setState(() {
+      _showGridView = !_showGridView;
+    });
   }
 
   @override
@@ -93,6 +111,12 @@ class _EbookHomeState extends State<EbookHome> {
             onPressed: _openAddNewBookOverlay,
             icon: const Icon(Icons.add),
           ),
+          IconButton(
+            onPressed: _toggleViewMode,
+            icon: Icon(_showGridView
+                ? Icons.grid_3x3
+                : Icons.list), // Toggle icon based on the view mode
+          ),
         ],
         title: const Text('ZEROBOOKS'),
       ),
@@ -100,12 +124,14 @@ class _EbookHomeState extends State<EbookHome> {
         children: [
           const Text('The chart'),
           Expanded(
-            child: BookList(
-              ebooks: _registeredEbook,
-              onRemoveEbook: _removeBook,
-              onEditEbook: _editBook,
-            ),
-          )
+            child: _showGridView
+                ? BookGridView(ebooks: _registeredEbook)
+                : BookList(
+                    ebooks: _registeredEbook,
+                    onRemoveEbook: _removeBook,
+                    onEditEbook: _editBook,
+                  ),
+          ),
         ],
       ),
     );

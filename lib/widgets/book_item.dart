@@ -28,9 +28,12 @@ class BookItem extends StatelessWidget {
                   bottomLeft: Radius.circular(12),
                 ),
               ),
-              child: Image.network(
-                fit: BoxFit.cover,
-                ebook.image, // Assuming image is a URL
+              child: Hero(
+                tag: 'book-hero-${ebook.id}',
+                child: Image.network(
+                  fit: BoxFit.cover,
+                  ebook.image, // Assuming image is a URL
+                ),
               ),
             ),
           ),
